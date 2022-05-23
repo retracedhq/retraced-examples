@@ -1,0 +1,49 @@
+{
+  "name": "jackson-examples",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "turbo run build",
+    "build:next-auth": "turbo run build --filter='next-auth'",
+    "dev:next-auth": "turbo run dev --filter='next-auth'",
+    "start:next-auth": "turbo run start --filter='next-auth'",
+    "test": "turbo run test",
+    "lint": "turbo run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "prepare": "husky install"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "apps/**/*.{js,ts}": [
+      "eslint --cache --fix"
+    ],
+    "apps/**/*.{js,ts,css,md}": [
+      "prettier --write"
+    ],
+    "*.json": [
+      "prettier --write"
+    ]
+  },
+  "devDependencies": {
+    "husky": "7.0.4",
+    "lint-staged": "12.3.7",
+    "prettier": "2.6.0",
+    "prettier-plugin-tailwindcss": "0.1.8",
+    "turbo": "1.2.4"
+  },
+  "engines": {
+    "npm": ">=7.0.0",
+    "node": ">=14.0.0"
+  },
+  "dependencies": {
+    "axios": "^0.27.2"
+  }
+}

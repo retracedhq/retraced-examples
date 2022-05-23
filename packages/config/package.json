@@ -1,0 +1,19 @@
+{
+  "name": "@boxyhq/config",
+  "version": "0.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "files": [
+    "eslint-preset.js",
+    "prettier-config.js"
+  ],
+  "dependencies": {
+    "eslint-config-next": "12.1.5",
+    "eslint-config-prettier": "8.5.0",
+    "eslint-plugin-react": "7.29.4"
+  },
+  "devDependencies": {
+    "prettier": "2.6.2",
+    "prettier-plugin-tailwindcss": "0.1.10"
+  }
+}

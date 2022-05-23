@@ -1,0 +1,21 @@
+.row {
+    display: flex;
+}
+
+.column {
+    flex: 50%;
+    padding: 10px;
+    min-height: 500px;
+}
+
+.logsColumn {
+    flex: 50%;
+    padding: 10px;
+    min-height: 500px;
+    border-left: 3px solid #333;
+}
+
+.layoutDiv {
+    border-style: solid;
+    border-color: #333;
+}
