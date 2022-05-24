@@ -23,7 +23,7 @@ export default function handler(req: any, res: any) {
         body: raw,
     };
 
-    fetch("http://localhost:3000/auditlog/admin/v1/project/dev/events/search?environment_id=dev", requestOptions)
+    return fetch("http://localhost:3000/auditlog/admin/v1/project/dev/events/search?environment_id=dev", requestOptions)
         .then(response => response.text())
         .then(result => res.status(200).send(result))
         .catch(error => res.status(400).send(error));
