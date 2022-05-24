@@ -12,7 +12,7 @@ export default function AccessDenied() {
   const getLogs = () => {
     axios
       .get(
-        `/api/logs/get?startTime=${+new Date(
+        `/api/auditLogs/get?startTime=${+new Date(
           new Date().setDate(new Date().getDate() - 1)
         )}&endTime=${+new Date(new Date().setDate(new Date().getDate() + 1))}`
       )
