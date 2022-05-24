@@ -73,7 +73,8 @@ export default function Header() {
                     "r",
                     "dev",
                     "Logged Out",
-                    (session ? session.user ? session.user.name : "" : "") || "",
+                    (session ? (session.user ? session.user.name : "") : "") ||
+                      "",
                     "Header Component",
                     "127.0.0.1",
                     "",
@@ -87,6 +88,15 @@ export default function Header() {
           )}
         </p>
       </div>
+      <nav>
+        <ul className={styles.navItems}>
+          <li className={styles.navItem}>
+            <Link href="/">
+              <a>Home</a>
+            </Link>
+          </li>
+        </ul>
+      </nav>
     </header>
   )
 }
