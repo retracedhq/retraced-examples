@@ -7,7 +7,7 @@ export default function handler(req: any, res: any) {
         "query": {
             "search_text": "",
             "offset": 0,
-            "length": 20,
+            "length": 1000,
             "start_time": req.body.startTime,
             "end_time": req.body.endTime,
             "create": "c",

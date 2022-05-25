@@ -18,7 +18,7 @@ export default function AccessDenied() {
       )
       .then((res) => {
         const events: [] = res.data.events
-        setLogs(events.reverse())
+        setLogs(events.reverse().slice(0, 20))
       })
   }
 

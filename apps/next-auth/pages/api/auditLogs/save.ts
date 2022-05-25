@@ -6,7 +6,7 @@ let defaultEvent = {
         "name": "dev"
     },
     "displayTitle": "Title",
-    "created": "2022-03-21T07:17:54",
+    "created": new Date().toISOString().slice(0, new Date().toISOString().length - 5),
     "actor": {
         "id": "string",
         "name": "actor1",
@@ -39,7 +39,7 @@ export default function handler(req: any, res: any) {
         body: raw,
     };
 
-    fetch("http://localhost:3000/auditlog/publisher/v1/project/dev/event", requestOptions)
+    return fetch("http://localhost:3000/auditlog/publisher/v1/project/dev/event", requestOptions)
         .then(response => response.text())
         .then(result => res.status(200).send(result))
         .catch(error => res.status(400).send(error));
