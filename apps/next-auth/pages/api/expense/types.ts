@@ -4,11 +4,10 @@ export class Expense {
     amount: number;
     constructor(obj: any) {
         this.id = obj.id;
-        this.title = obj["title"];
+        this.title = obj.title.toString() || "";
         this.amount = parseFloat(obj["amount"].toString());
     }
 }
-
 export class ExpenseStore {
     private static _instance: ExpenseStore;
     store: Expense[] = [];
@@ -20,10 +19,10 @@ export class ExpenseStore {
     }
     private constructor() {
         this.store = [];
-        // this.push(new Expense({ title: "Gas", amount: "100" }))
-        // this.push(new Expense({ title: "Electricity", amount: "1000" }))
-        // this.push(new Expense({ title: "Internet", amount: "500" }))
-        // this.push(new Expense({ title: "Property Tax", amount: "2000" }))
+        this.push(new Expense({ title: "Gas", amount: "100" }))
+        this.push(new Expense({ title: "Electricity", amount: "1000" }))
+        this.push(new Expense({ title: "Internet", amount: "500" }))
+        this.push(new Expense({ title: "Property Tax", amount: "2000" }))
     }
 
     public getIndex(): number {

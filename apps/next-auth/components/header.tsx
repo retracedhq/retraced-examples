@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { signIn, signOut, useSession } from "next-auth/react"
 import styles from "./header.module.css"
-import saveEvent from "./saveEvent"
+import { getAccessRights, saveEvent } from "./helpers"
 
 // The approach used in this component shows how to build a sign in and sign out
 // component that works on pages which support both client and server side
@@ -9,6 +9,8 @@ import saveEvent from "./saveEvent"
 export default function Header() {
   const { data: session, status } = useSession()
   const loading = status === "loading"
+  const rights = getAccessRights(session);
+  const name = session?.user?.name?.split(" ")[0].toString();
 
   return (
     <header>
@@ -32,17 +34,6 @@ export default function Header() {
                 onClick={(e) => {
                   e.preventDefault()
                   signIn("boxyhq-saml")
-                  saveEvent(
-                    "Log in",
-                    "r",
-                    "dev",
-                    "Log in",
-                    "",
-                    "Header Component",
-                    "127.0.0.1",
-                    "",
-                    "Header"
-                  )
                 }}
               >
                 Sign in
@@ -73,8 +64,11 @@ export default function Header() {
                     "r",
                     "dev",
                     "Logged Out",
-                    (session ? (session.user ? session.user.name : "") : "") ||
-                      "",
+                    (rights === "viewer" && name != "viewer")
+                      ? `(viewer - ${session?.user?.name
+                          ?.split(" ")[0]
+                          .toString()})`
+                      : rights,
                     "Header Component",
                     "127.0.0.1",
                     "",

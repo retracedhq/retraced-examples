@@ -66,8 +66,7 @@ export default function AccessDenied() {
             return `Updated ${k}: ${obj.updates[k]}`;
         });
       case "d":
-      debugger;
-        return [`Expense for ${obj["expense"]["title"]} deleted!`]
+        return [`Expense for ${obj["title"]} deleted!`]
       default:
         return []
     }

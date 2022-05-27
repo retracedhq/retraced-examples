@@ -7,7 +7,7 @@ let defaultEvent = {
         "id": "string",
         "name": "dev"
     },
-    "displayTitle": "Title",
+    "displayTitle": "",
     "created": new Date().toISOString().slice(0, new Date().toISOString().length - 5),
     "actor": {
         "id": "string",
@@ -69,7 +69,6 @@ const worker = async () => {
 export default function handler(req: any, res: any) {
     try {
         var raw: AuditLog = { ...defaultEvent, ...req.body };
-        console.log("raw", raw);
         raw.created = new Date().toISOString().slice(0, new Date().toISOString().length - 5),
             AuditLogQueue.getInstance().enqueue(raw);
         res.status(200).send(true)
