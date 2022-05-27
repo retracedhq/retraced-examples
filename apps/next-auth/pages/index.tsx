@@ -39,8 +39,8 @@ export default function ProtectedPage() {
         amount,
       }),
     })
+    let old = list.filter((d: any) => d.id == id)[0];
     const json = await res.json()
-    setList(json)
     if (session?.user?.name) {
       saveEvent(
         "Update Expense Record",
@@ -51,9 +51,16 @@ export default function ProtectedPage() {
         "Expense List",
         "127.0.0.1",
         "",
-        "Index"
+        "Index",
+        {
+            updates:{
+                title: title != old["title"] ? `${old["title"]} => ${title}` : undefined,
+                amount: amount != old["amount"] ? `${old["amount"]} => ${amount}` : undefined,
+              }
+        }
       )
     }
+    setList(json);
     reset()
   }
   const reset = () => {
@@ -79,14 +86,15 @@ export default function ProtectedPage() {
     if (session?.user?.name) {
       saveEvent(
         "Delete Expense Record",
-        "u",
+        "d",
         "dev",
         "Delete Data",
         session?.user?.name.split(" ")[0],
         "Expense List",
         "127.0.0.1",
         "",
-        "Index"
+        "Index",
+        expense
       )
     }
   }
@@ -111,7 +119,7 @@ export default function ProtectedPage() {
     if (session?.user?.name) {
       saveEvent(
         "Create Expense Record",
-        "u",
+        "c",
         "dev",
         "Create Data",
         session?.user?.name.split(" ")[0],

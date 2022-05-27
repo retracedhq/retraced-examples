@@ -3,11 +3,12 @@ import axios from "axios"
 
 export default function AccessDenied() {
   const [logs, setLogs] = useState([])
+  var lastStartTime = 0
   useEffect(() => {
     getLogs()
     setInterval(() => {
       getLogs()
-    }, 5000)
+    }, 2500)
   }, [])
   const getLogs = () => {
     axios
@@ -18,7 +19,26 @@ export default function AccessDenied() {
       )
       .then((res) => {
         const events: [] = res.data.events
-        setLogs(events.reverse().slice(0, 20))
+        if (lastStartTime == 0) {
+          if (events.length > 0) {
+            const temp = events.reverse().slice(0, 20)
+            setLogs(temp)
+            lastStartTime = parseInt(temp[0]["created"])
+          }
+        } else {
+          let tmp: any[] = events.reverse()
+          if (tmp.length > 0) {
+            let final: never[] = tmp.map((t) => {
+              if (parseInt(t["created"].toString()) > lastStartTime) {
+                return { ...t, is_new: true }
+              } else {
+                return { ...t, is_new: false }
+              }
+            }) as never[]
+            lastStartTime = parseInt(final[0]["created"])
+            setLogs(final.slice(0, 20))
+          }
+        }
       })
   }
 
@@ -39,15 +59,37 @@ export default function AccessDenied() {
     } while (true)
   }
 
+  const getMetaString = (obj: any, crud: string): string[] => {
+    switch (crud) {
+      case "u":
+        return Object.keys(obj.updates).map(k => {
+            return `Updated ${k}: ${obj.updates[k]}`;
+        });
+      case "d":
+      debugger;
+        return [`Expense for ${obj["expense"]["title"]} deleted!`]
+      default:
+        return []
+    }
+  }
+
   return (
     <div>
       <h1>Logs</h1>
       <p>
         {logs.map((l, i) => {
           return (
-            <div key={i}>
-              <div>
-                <span>{formatEvent(l["display"]["markdown"])}</span>
+            <div key={i} style={{border: '2px solid grey', marginBottom: "10px"}}>
+              <div style={{ backgroundColor: l["is_new"] ? "grey" : "white", padding: "10px" }}>
+                <span>{formatEvent(l["display"]["markdown"])}</span><br />
+                {Object.keys(l["fields"]).length > 0 && (
+                  <>
+                    <br />
+                    <span>{getMetaString(l["fields"], l["crud"]).map(m => {
+                        return <div><u>{m}</u></div>;
+                    })}</span>
+                  </>
+                )}
               </div>
             </div>
           )

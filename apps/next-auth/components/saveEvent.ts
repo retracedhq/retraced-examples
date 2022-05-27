@@ -1,6 +1,6 @@
 import axios from 'axios';
 const saveEvent = (action: string, crud: string, group: string, displayTitle: string, actor: string,
-    target: string, source_ip: string, description: string, component: string) => {
+    target: string, source_ip: string, description: string, component: string, meta?: any) => {
     axios.post(`/api/auditLogs/save`, {
         "action": action,
         "crud": crud,
@@ -25,7 +25,7 @@ const saveEvent = (action: string, crud: string, group: string, displayTitle: st
         "description": description,
         "is_anonymous": true,
         "is_failure": false,
-        "fields": {},
+        "fields": meta || {},
         "component": component,
         "version": "v1"
     }).then(res => {})

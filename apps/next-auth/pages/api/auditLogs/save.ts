@@ -1,3 +1,5 @@
+import AuditLogQueue, { AuditLog } from './queue';
+
 let defaultEvent = {
     "action": "test",
     "crud": "c",
@@ -26,21 +28,54 @@ let defaultEvent = {
     "component": "",
     "version": "v1"
 };
-export default function handler(req: any, res: any) {
-    var myHeaders = new Headers();
-    myHeaders.append("Authorization", "token=dev_write");
-    myHeaders.append("Content-Type", "application/json");
 
-    var raw = JSON.stringify({ ...defaultEvent, ...req.body });
-
-    var requestOptions = {
-        method: 'POST',
-        headers: myHeaders,
-        body: raw,
-    };
-
-    return fetch("http://localhost:3000/auditlog/publisher/v1/project/dev/event", requestOptions)
-        .then(response => response.text())
-        .then(result => res.status(200).send(result))
-        .catch(error => res.status(400).send(error));
+const sleep = async (time: number) => {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => { resolve(undefined); }, time)
+    });
 }
+
+const worker = async () => {
+    do {
+        let log: AuditLog | undefined = AuditLogQueue.getInstance().dequeue();
+        if (log) {
+            var myHeaders = new Headers();
+            myHeaders.append("Authorization", "token=dev_write");
+            myHeaders.append("Content-Type", "application/json");
+
+            var raw = JSON.stringify({ ...defaultEvent, ...log });
+
+            var requestOptions = {
+                method: 'POST',
+                headers: myHeaders,
+                body: raw,
+            };
+
+            fetch("http://localhost:3000/auditlog/publisher/v1/project/dev/event", requestOptions)
+                .then(response => response.text())
+                .then(result => console.log(result))
+                .catch(error => console.log(error));
+        } else {
+            await sleep(500);
+        }
+    } while (true);
+}
+
+// TODO:
+/*
+ * Try bulk api
+ */
+
+export default function handler(req: any, res: any) {
+    try {
+        var raw: AuditLog = { ...defaultEvent, ...req.body };
+        console.log("raw", raw);
+        raw.created = new Date().toISOString().slice(0, new Date().toISOString().length - 5),
+            AuditLogQueue.getInstance().enqueue(raw);
+        res.status(200).send(true)
+    } catch (ex) {
+        res.status(400).json(ex);
+    }
+}
+
+worker();
