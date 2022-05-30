@@ -12,7 +12,6 @@ export default function AccessDenied() {
           }}
         >
           You must be signed in to view this page. Click on &quot;Sign In&quot;
-          above to begin the SAML login flow using SAML Jackson and NextAuth.js.
         </a>
       </p>
     </>
