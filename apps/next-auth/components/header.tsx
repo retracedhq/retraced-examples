@@ -62,7 +62,7 @@ export default function Header() {
                   saveEvent(
                     "Logout",
                     "r",
-                    "dev",
+                    rights,
                     "Logged Out",
                     (rights === "viewer" && name != "viewer")
                       ? `(viewer - ${session?.user?.name

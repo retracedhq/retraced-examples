@@ -5,6 +5,8 @@ import AccessDenied from "../components/access-denied"
 import { saveEvent } from "../components/helpers"
 import { Expense } from "./api/expense/types"
 import { getAccessRights } from "../components/helpers"
+import { faTrash, faPencil } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 export default function ProtectedPage() {
   const { data: session, status } = useSession()
@@ -21,7 +23,7 @@ export default function ProtectedPage() {
         saveEvent(
           "Log in",
           "r",
-          "dev",
+          rights,
           "Log in",
           rights === "viewer"
             ? `(viewer - ${session.user.name?.split(" ")[0].toString()})`
@@ -62,7 +64,7 @@ export default function ProtectedPage() {
       saveEvent(
         "Update Expense Record",
         "u",
-        "dev",
+        rights,
         "Update Data",
         session?.user?.name.split(" ")[0],
         "Expense List",
@@ -108,7 +110,7 @@ export default function ProtectedPage() {
       saveEvent(
         "Delete Expense Record",
         "d",
-        "dev",
+        rights,
         "Delete Data",
         session?.user?.name.split(" ")[0],
         "Expense List",
@@ -141,7 +143,7 @@ export default function ProtectedPage() {
       saveEvent(
         "Create Expense Record",
         "c",
-        "dev",
+        rights,
         "Create Data",
         session?.user?.name.split(" ")[0],
         "Expense List",
@@ -177,21 +179,23 @@ export default function ProtectedPage() {
   return (
     <Layout>
       {(rights === "admin" || rights === "manager") && (
-        <>
+        <div>
           <h1>Add an Expense</h1>
           <form>
-            <label>Enter the Amount:</label>
+            <label style={{fontSize: "1.2rem"}}>Enter the Amount:</label>
             <br />
             <input
+              className="textPrimary"
               value={amount}
               type="number"
               id="amount"
               onChange={(e) => setAmount(parseInt(e.target.value))}
             />
             <br />
-            <label>Description:</label>
+            <label style={{fontSize: "1.2rem"}}>Description:</label>
             <br />
             <input
+              className="textPrimary"
               value={title}
               type="text"
               id="title"
@@ -200,35 +204,37 @@ export default function ProtectedPage() {
             <br />
             <br />
             <input
+              className="buttonPrimary"
               type="button"
               id="add"
               value={id == 0 ? "Add" : "Update"}
               onClick={id == 0 ? saveExpense : updateExpense}
             />
-            {id != 0 && <button onClick={reset}>Cancel</button>}
+            {id != 0 && <button className="buttonPrimary marginAll" onClick={reset}>Cancel</button>}
           </form>
           <hr />
-        </>
+        </div>
       )}
       {list.map((l: Expense) => {
         if (l) {
           return (
-            <div key={l.id}>
+            <div key={l.id} style={{marginBottom: "10px"}}>
               {(rights === "admin" || rights === "manager") && (
-                <>
+                <span style={{marginRight: "5px"}}>
                   <button
+                    className="buttonPrimary"
                     onClick={(e) => {
                       setId(l.id ? l.id : 0)
                       setAmount(l.amount)
                       setTitle(l.title)
                     }}
                   >
-                    Edit
+                    <FontAwesomeIcon size={"1x"} icon={faPencil}/>
                   </button>{" "}
-                  <button onClick={(e) => deleteExpense(l)}>Delete</button>
-                </>
+                  <button className="buttonPrimary" onClick={(e) => deleteExpense(l)}><FontAwesomeIcon size={"1x"} icon={faTrash}/></button>
+                </span>
               )}
-              You spent {l.amount}/- for {l.title}
+              <span style={{fontSize: "1.4rem"}}>You spent {l.amount}/- for {l.title}</span>
             </div>
           )
         } else {

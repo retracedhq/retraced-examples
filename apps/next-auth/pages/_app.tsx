@@ -1,6 +1,9 @@
 import { SessionProvider } from "next-auth/react"
 import type { AppProps } from "next/app"
 import "./styles.css"
+import "@fortawesome/fontawesome-svg-core/styles.css"; // import Font Awesome CSS
+import { config } from "@fortawesome/fontawesome-svg-core";
+config.autoAddCss = false;
 
 // Use of the <SessionProvider> is mandatory to allow components that call
 // `useSession()` anywhere in your application to access the `session` object.

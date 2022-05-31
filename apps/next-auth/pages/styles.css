@@ -30,3 +30,40 @@ iframe {
   border-radius: 0.5rem;
   filter: invert(1);
 }
+
+.button,
+.buttonPrimary {
+  font-weight: 500;
+  border-radius: 0.3rem;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1.4rem;
+  padding: 0.7rem 0.8rem;
+  position: relative;
+  z-index: 10;
+  background-color: transparent;
+  color: #555;
+}
+
+.buttonPrimary {
+  background-color: #346df1;
+  border-color: #346df1;
+  color: #fff;
+  text-decoration: none;
+}
+
+.buttonPrimary:hover {
+  box-shadow: inset 0 0 5rem rgba(0, 0, 0, 0.2);
+}
+
+.textPrimary {
+  padding: 2%;
+  background-color: #fbfcfd;
+  background-repeat: no-repeat;
+  background-size: 0 100%;
+  font-size: large;
+}
+
+.marginAll {
+  margin: 1.1rem;
+}
