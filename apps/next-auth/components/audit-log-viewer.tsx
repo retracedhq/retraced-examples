@@ -19,24 +19,26 @@ export default function AccessDenied() {
       )
       .then((res) => {
         const events: [] = res.data.events
-        if (lastStartTime == 0) {
-          if (events.length > 0) {
-            const temp = events.reverse().slice(0, 20)
-            setLogs(temp)
-            lastStartTime = parseInt(temp[0]["created"])
-          }
-        } else {
-          let tmp: any[] = events.reverse()
-          if (tmp.length > 0) {
-            let final: never[] = tmp.map((t) => {
-              if (parseInt(t["created"].toString()) > lastStartTime) {
-                return { ...t, is_new: true }
-              } else {
-                return { ...t, is_new: false }
-              }
-            }) as never[]
-            lastStartTime = parseInt(final[0]["created"])
-            setLogs(final.slice(0, 20))
+        if(Array.isArray(events)) {
+          if (lastStartTime == 0) {
+            if (events.length > 0) {
+              const temp = events.reverse().slice(0, 20)
+              setLogs(temp)
+              lastStartTime = parseInt(temp[0]["created"])
+            }
+          } else {
+            let tmp: any[] = events.reverse()
+            if (tmp.length > 0) {
+              let final: never[] = tmp.map((t) => {
+                if (parseInt(t["created"].toString()) > lastStartTime) {
+                  return { ...t, is_new: true }
+                } else {
+                  return { ...t, is_new: false }
+                }
+              }) as never[]
+              lastStartTime = parseInt(final[0]["created"])
+              setLogs(final.slice(0, 20))
+            }
           }
         }
       })
