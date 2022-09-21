@@ -14,6 +14,8 @@ const actions = [
   'page.load',
 ];
 
+const ips = ['192.168.1.1', '200.168.1.10', '12.18.12.13', '92.68.51.21'];
+
 // require api token / project to start
 if (!process.env.RETRACED_API_TOKEN || !process.env.RETRACED_PROJECTID) {
   console.log('ERROR cannot start without RETRACED_API_TOKEN and RETRACED_PROJECTID');
@@ -47,12 +49,15 @@ app.get('/api/viewertoken', async (req, res) => {
   // use a random action
   let randomAction = actions[chance.integer({ min: 0, max: actions.length - 1 })];
 
+  // use random ips
+  let randomIPs = ips[chance.integer({ min: 0, max: ips.length - 1 })];
+
   // Report an event on every page load
   retraced.reportEvent({
     crud: 'u',
     action: randomAction,
     description: 'user <anonymous> reticulated the splines',
-    created: new Date(),
+    created: new Date().toISOString(),
     actor: {
       id: actor_id,
       name: actor_name,
@@ -61,6 +66,7 @@ app.get('/api/viewertoken', async (req, res) => {
       id: req.query.team_id,
       name: req.query.team_id,
     },
+    sourceIp: randomIPs,
   });
 
   // Get A viewer token and send it to the client

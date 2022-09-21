@@ -22,14 +22,14 @@ export default function AccessDenied() {
         if(Array.isArray(events)) {
           if (lastStartTime == 0) {
             if (events.length > 0) {
-              const temp = events.reverse().slice(0, 20)
+              const temp = events.filter(e => e["created"]).reverse().slice(0, 20)
               setLogs(temp)
               lastStartTime = parseInt(temp[0]["created"])
             }
           } else {
             let tmp: any[] = events.reverse()
             if (tmp.length > 0) {
-              let final: never[] = tmp.map((t) => {
+              let final: never[] = tmp.filter((e) => e && e.created).map((t) => {
                 if (parseInt(t["created"].toString()) > lastStartTime) {
                   return { ...t, is_new: true }
                 } else {
@@ -83,7 +83,7 @@ export default function AccessDenied() {
             <div key={i} style={{border: '2px solid grey', marginBottom: "10px"}}>
               <div style={{ backgroundColor: l["is_new"] ? "grey" : "white", padding: "10px" }}>
                 <span>{formatEvent(l["display"]["markdown"])}</span><br />
-                {Object.keys(l["fields"]).length > 0 && (
+                {Object.keys(l["fields"] || {}).length > 0 && (
                   <>
                     <br />
                     <span>{getMetaString(l["fields"], l["crud"]).map(m => {
