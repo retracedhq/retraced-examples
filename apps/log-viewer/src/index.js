@@ -1,8 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import * as util from 'util';
-import RetracedEventsBrowser from 'retraced-logs-viewer';
+import RetracedEventsBrowser from '@retraced-hq/logs-viewer';
 
 const url = `http://localhost:3030/api/viewertoken?team_id=dev`;
 
@@ -16,10 +15,7 @@ function render(token) {
 
 // render an error
 function renderError(err) {
-  ReactDOM.render(
-    <div>Could not initialize Audit Log: {util.inspect(err)}</div>,
-    document.getElementById('root')
-  );
+  ReactDOM.render(<div>Could not initialize Audit Log: {err}</div>, document.getElementById('root'));
 }
 
 // get the token, then use it to render the browser
