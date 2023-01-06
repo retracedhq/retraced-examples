@@ -1,7 +1,7 @@
 const cors = require('cors');
 const express = require('express');
 const Chance = require('chance');
-const Retraced = require('@retraced-hq/retraced');
+const Retraced = require('@retracedhq/retraced');
 const app = express();
 
 const chance = new Chance();
