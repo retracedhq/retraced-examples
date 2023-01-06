@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import RetracedEventsBrowser from '@retraced-hq/logs-viewer';
+import RetracedEventsBrowser from '@retracedhq/logs-viewer';
 
 const url = `http://localhost:3030/api/viewertoken?team_id=dev`;
 
