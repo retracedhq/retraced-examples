@@ -9,8 +9,8 @@ import { getAccessRights, saveEvent } from "./helpers"
 export default function Header() {
   const { data: session, status } = useSession()
   const loading = status === "loading"
-  const rights = getAccessRights(session);
-  const name = session?.user?.name?.split(" ")[0].toString();
+  const rights = getAccessRights(session)
+  const name = session?.user?.name?.split(" ")[0].toString()
 
   return (
     <header>
@@ -63,8 +63,7 @@ export default function Header() {
                     "Logout",
                     "r",
                     rights,
-                    "Logged Out",
-                    (rights === "viewer" && name != "viewer")
+                    rights === "viewer" && name != "viewer"
                       ? `(viewer - ${session?.user?.name
                           ?.split(" ")[0]
                           .toString()})`
