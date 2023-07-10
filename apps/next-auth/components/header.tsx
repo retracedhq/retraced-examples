@@ -63,7 +63,6 @@ export default function Header() {
                     "Logout",
                     "r",
                     rights,
-                    "Logged Out",
                     rights === "viewer" && name != "viewer"
                       ? `(viewer - ${session?.user?.name
                           ?.split(" ")[0]

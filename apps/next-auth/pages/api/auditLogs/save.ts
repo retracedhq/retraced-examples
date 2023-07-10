@@ -7,7 +7,6 @@ let defaultEvent = {
     id: "string",
     name: "dev",
   },
-  displayTitle: "",
   created: new Date()
     .toISOString()
     .slice(0, new Date().toISOString().length - 5),

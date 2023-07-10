@@ -5,7 +5,6 @@ export const saveEvent = async (
   action: string,
   crud: string,
   group: string,
-  displayTitle: string,
   actor: string,
   target: string,
   source_ip: string,
@@ -21,7 +20,6 @@ export const saveEvent = async (
       id: "string",
       name: group,
     },
-    displayTitle: displayTitle,
     created: "2022-03-21T07:17:54",
     actor: {
       id: "string",
@@ -47,7 +45,7 @@ export const saveEvent = async (
   }
 
   if (externalId) {
-    event.externalId = externalId
+    event.external_id = externalId
   }
 
   await axios.post(`/api/auditLogs/save`, event)

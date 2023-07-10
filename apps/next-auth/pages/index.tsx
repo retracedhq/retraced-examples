@@ -24,7 +24,6 @@ export default function ProtectedPage() {
           "Log in",
           "r",
           rights,
-          "Log in",
           rights === "viewer"
             ? `(viewer - ${session.user.name?.split(" ")[0].toString()})`
             : rights,
@@ -67,7 +66,6 @@ export default function ProtectedPage() {
         "Update Expense Record",
         "u",
         rights,
-        "Update Data",
         session?.user?.name.split(" ")[0],
         "Expense List",
         "127.0.0.1",
@@ -113,7 +111,6 @@ export default function ProtectedPage() {
         "Delete Expense Record",
         "d",
         rights,
-        "Delete Data",
         session?.user?.name.split(" ")[0],
         "Expense List",
         "127.0.0.1",
@@ -146,7 +143,6 @@ export default function ProtectedPage() {
         "Create Expense Record",
         "c",
         rights,
-        "Create Data",
         session?.user?.name.split(" ")[0],
         "Expense List",
         "127.0.0.1",
