@@ -33,7 +33,7 @@ export default function ProtectedPage() {
           "Log in",
           "Home",
           undefined,
-          "__PLACEHOLDER__"
+          "BOX-2"
         )
       }
       const res = await fetch("/api/expense/get")
