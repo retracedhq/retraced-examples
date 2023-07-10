@@ -17,24 +17,8 @@ export default function ProtectedPage() {
   const [amount, setAmount] = useState(0)
   const [list, setList] = useState([])
 
-  const fetchData = async (first?: boolean) => {
+  const fetchData = async () => {
     if (session?.user) {
-      if (first && list.length == 0) {
-        await saveEvent(
-          "Log in",
-          "r",
-          rights,
-          rights === "viewer"
-            ? `(viewer - ${session.user.name?.split(" ")[0].toString()})`
-            : rights,
-          "Home Page",
-          "127.0.0.1",
-          "Log in",
-          "Home",
-          undefined,
-          "BOX-2"
-        )
-      }
       const res = await fetch("/api/expense/get")
       const json = await res.json()
       if (json) {
@@ -155,7 +139,7 @@ export default function ProtectedPage() {
 
   // Fetch content from protected route
   useEffect(() => {
-    fetchData(true)
+    fetchData()
     setInterval(() => {
       fetchData()
     }, 2500)

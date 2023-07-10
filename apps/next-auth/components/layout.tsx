@@ -3,7 +3,7 @@ import Footer from "./footer"
 import LogsViewer from "./audit-log-viewer"
 import styles from "./layout.module.css"
 import { useSession } from "next-auth/react"
-import { getAccessRights } from './helpers';
+import { getAccessRights } from "./helpers"
 
 interface Props {
   children: React.ReactNode
@@ -11,7 +11,7 @@ interface Props {
 
 export default function Layout({ children }: Props) {
   const { data: session, status } = useSession()
-  const rights = getAccessRights(session)
+  const rights = getAccessRights(session?.user)
   return (
     <>
       <Header />

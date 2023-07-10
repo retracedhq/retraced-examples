@@ -83,7 +83,7 @@ export default function AccessDenied() {
   return (
     <div>
       <h1>Logs</h1>
-      <p>
+      <div>
         {logs.map((l, i) => {
           return (
             <div
@@ -116,7 +116,7 @@ export default function AccessDenied() {
             </div>
           )
         })}
-      </p>
+      </div>
     </div>
   )
 }

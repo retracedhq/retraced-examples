@@ -9,7 +9,7 @@ import { getAccessRights, saveEvent } from "./helpers"
 export default function Header() {
   const { data: session, status } = useSession()
   const loading = status === "loading"
-  const rights = getAccessRights(session)
+  const rights = getAccessRights(session?.user)
   const name = session?.user?.name?.split(" ")[0].toString()
 
   return (
@@ -70,7 +70,7 @@ export default function Header() {
                       : rights,
                     "Header Component",
                     "127.0.0.1",
-                    "",
+                    "Logout",
                     "Header"
                   )
                 }}
