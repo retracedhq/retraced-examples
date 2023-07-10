@@ -5,8 +5,8 @@ import AccessDenied from "../components/access-denied"
 import { saveEvent } from "../components/helpers"
 import { Expense } from "./api/expense/types"
 import { getAccessRights } from "../components/helpers"
-import { faTrash, faPencil } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTrash, faPencil } from "@fortawesome/free-solid-svg-icons"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
 export default function ProtectedPage() {
   const { data: session, status } = useSession()
@@ -20,7 +20,7 @@ export default function ProtectedPage() {
   const fetchData = async (first?: boolean) => {
     if (session?.user) {
       if (first && list.length == 0) {
-        saveEvent(
+        await saveEvent(
           "Log in",
           "r",
           rights,
@@ -31,7 +31,9 @@ export default function ProtectedPage() {
           "Home Page",
           "127.0.0.1",
           "Log in",
-          "Home"
+          "Home",
+          undefined,
+          "__PLACEHOLDER__"
         )
       }
       const res = await fetch("/api/expense/get")
@@ -61,7 +63,7 @@ export default function ProtectedPage() {
     let old = list.filter((d: any) => d.id == id)[0]
     const json = await res.json()
     if (session?.user?.name) {
-      saveEvent(
+      await saveEvent(
         "Update Expense Record",
         "u",
         rights,
@@ -107,7 +109,7 @@ export default function ProtectedPage() {
     const json = await res.json()
     setList(json)
     if (session?.user?.name) {
-      saveEvent(
+      await saveEvent(
         "Delete Expense Record",
         "d",
         rights,
@@ -140,7 +142,7 @@ export default function ProtectedPage() {
     const json = await res.json()
     setList(json)
     if (session?.user?.name) {
-      saveEvent(
+      await saveEvent(
         "Create Expense Record",
         "c",
         rights,
@@ -182,7 +184,7 @@ export default function ProtectedPage() {
         <div>
           <h1>Add an Expense</h1>
           <form>
-            <label style={{fontSize: "1.2rem"}}>Enter the Amount:</label>
+            <label style={{ fontSize: "1.2rem" }}>Enter the Amount:</label>
             <br />
             <input
               className="textPrimary"
@@ -192,7 +194,7 @@ export default function ProtectedPage() {
               onChange={(e) => setAmount(parseInt(e.target.value))}
             />
             <br />
-            <label style={{fontSize: "1.2rem"}}>Description:</label>
+            <label style={{ fontSize: "1.2rem" }}>Description:</label>
             <br />
             <input
               className="textPrimary"
@@ -210,7 +212,11 @@ export default function ProtectedPage() {
               value={id == 0 ? "Add" : "Update"}
               onClick={id == 0 ? saveExpense : updateExpense}
             />
-            {id != 0 && <button className="buttonPrimary marginAll" onClick={reset}>Cancel</button>}
+            {id != 0 && (
+              <button className="buttonPrimary marginAll" onClick={reset}>
+                Cancel
+              </button>
+            )}
           </form>
           <hr />
         </div>
@@ -218,9 +224,9 @@ export default function ProtectedPage() {
       {list.map((l: Expense) => {
         if (l) {
           return (
-            <div key={l.id} style={{marginBottom: "10px"}}>
+            <div key={l.id} style={{ marginBottom: "10px" }}>
               {(rights === "admin" || rights === "manager") && (
-                <span style={{marginRight: "5px"}}>
+                <span style={{ marginRight: "5px" }}>
                   <button
                     className="buttonPrimary"
                     onClick={(e) => {
@@ -229,12 +235,19 @@ export default function ProtectedPage() {
                       setTitle(l.title)
                     }}
                   >
-                    <FontAwesomeIcon size={"1x"} icon={faPencil}/>
+                    <FontAwesomeIcon size={"1x"} icon={faPencil} />
                   </button>{" "}
-                  <button className="buttonPrimary" onClick={(e) => deleteExpense(l)}><FontAwesomeIcon size={"1x"} icon={faTrash}/></button>
+                  <button
+                    className="buttonPrimary"
+                    onClick={(e) => deleteExpense(l)}
+                  >
+                    <FontAwesomeIcon size={"1x"} icon={faTrash} />
+                  </button>
                 </span>
               )}
-              <span style={{fontSize: "1.4rem"}}>You spent {l.amount}/- for {l.title}</span>
+              <span style={{ fontSize: "1.4rem" }}>
+                You spent {l.amount}/- for {l.title}
+              </span>
             </div>
           )
         } else {
