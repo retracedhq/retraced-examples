@@ -1,5 +1,7 @@
 import axios from "axios"
-export const saveEvent = (
+import pjson from "../../../package.json"
+
+export const saveEvent = async (
   action: string,
   crud: string,
   group: string,
@@ -8,59 +10,45 @@ export const saveEvent = (
   source_ip: string,
   description: string,
   component: string,
-  meta?: any
+  meta?: any,
+  externalId?: string
 ) => {
-  axios
-    .post(`/api/auditLogs/save`, {
-      action: action,
-      crud: crud,
-      group: {
-        id: "string",
-        name: group,
-      },
-      created: "2022-03-21T07:17:54",
-      actor: {
-        id: "string",
-        name: actor,
-        href: "string",
-      },
-      target: {
-        id: "string",
-        name: target,
-        href: "target2",
-        type: "target1",
-      },
-      source_ip: source_ip,
-      description: description,
-      is_anonymous: true,
-      is_failure: false,
-      fields: convertFields(meta || {}),
-      component: component,
-      version: "v1",
-    })
-    .then((res) => {})
-}
-
-const convertFields = (fields: any) => {
-  const ret: any = {}
-  for (const key in fields) {
-    if (fields.hasOwnProperty(key)) {
-      const element = fields[key]
-      switch (typeof element) {
-        case "string":
-        case "number":
-        case "boolean":
-          ret[key] = element.toString()
-          break
-        case "object":
-          ret[key] = JSON.stringify(element)
-          break
-        default:
-          ret[key] = element.toString()
-      }
-    }
+  const event: any = {
+    action: action,
+    crud: crud,
+    group: {
+      id: "string",
+      name: group,
+    },
+    created: "2022-03-21T07:17:54",
+    actor: {
+      id: "string",
+      name: actor,
+      href: "string",
+    },
+    target: {
+      id: "string",
+      name: target,
+      href: "target2",
+      type: "target1",
+    },
+    source_ip: source_ip,
+    description: description,
+    is_anonymous: true,
+    is_failure: false,
+    component: component,
+    version: pjson.version,
   }
-  return ret
+
+  if (meta) {
+    event.fields = meta
+  }
+
+  if (externalId) {
+    event.external_id = externalId
+  }
+
+  await axios.post(`/api/auditLogs/save`, event)
 }
 
 export const getAccessRights = (session: any): string => {

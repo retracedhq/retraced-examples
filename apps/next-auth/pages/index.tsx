@@ -20,7 +20,7 @@ export default function ProtectedPage() {
   const fetchData = async (first?: boolean) => {
     if (session?.user) {
       if (first && list.length == 0) {
-        saveEvent(
+        await saveEvent(
           "Log in",
           "r",
           rights,
@@ -30,7 +30,9 @@ export default function ProtectedPage() {
           "Home Page",
           "127.0.0.1",
           "Log in",
-          "Home"
+          "Home",
+          undefined,
+          "BOX-2"
         )
       }
       const res = await fetch("/api/expense/get")
@@ -60,7 +62,7 @@ export default function ProtectedPage() {
     let old = list.filter((d: any) => d.id == id)[0]
     const json = await res.json()
     if (session?.user?.name) {
-      saveEvent(
+      await saveEvent(
         "Update Expense Record",
         "u",
         rights,
@@ -105,7 +107,7 @@ export default function ProtectedPage() {
     const json = await res.json()
     setList(json)
     if (session?.user?.name) {
-      saveEvent(
+      await saveEvent(
         "Delete Expense Record",
         "d",
         rights,
@@ -137,7 +139,7 @@ export default function ProtectedPage() {
     const json = await res.json()
     setList(json)
     if (session?.user?.name) {
-      saveEvent(
+      await saveEvent(
         "Create Expense Record",
         "c",
         rights,
