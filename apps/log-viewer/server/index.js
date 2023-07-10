@@ -67,7 +67,7 @@ app.get('/api/viewertoken', async (req, res) => {
       name: req.query.team_id,
     },
     source_ip: randomIPs,
-    external_id: '__PLACEHOLDER__',
+    external_id: 'BOX-1',
   });
 
   // Get A viewer token and send it to the client
