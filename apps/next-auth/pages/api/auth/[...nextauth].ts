@@ -1,6 +1,8 @@
 import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import BoxyHQSAMLProvider from "next-auth/providers/boxyhq-saml"
+import { getAccessRights, getEvent } from "../../../components/helpers"
+import AuditLogQueue from "../auditLogs/queue"
 
 const samlLoginUrl =
   process.env.BOXYHQ_SAML_JACKSON_URL || "https://jackson-demo.boxyhq.com"
@@ -74,7 +76,6 @@ export default NextAuth({
           return null
         }
         const profile = await resUserInfo.json()
-
         if (profile?.id && profile?.email) {
           return {
             id: profile.id,
@@ -97,6 +98,31 @@ export default NextAuth({
     async jwt({ token }) {
       token.userRole = "admin"
       return token
+    },
+    async signIn({ user, account, profile, email, credentials }) {
+      try {
+        const rights = getAccessRights(profile)
+
+        AuditLogQueue.getInstance().enqueue(
+          getEvent(
+            "Log in",
+            "r",
+            rights,
+            rights === "viewer"
+              ? `(viewer - ${profile.firstName ? profile.firstName : ""})`
+              : rights,
+            "Home Page",
+            "127.0.0.1",
+            "Log in",
+            "Home",
+            undefined
+          )
+        )
+      } catch (e) {
+        console.log("Error saving event", e)
+      }
+
+      return true
     },
   },
 })
