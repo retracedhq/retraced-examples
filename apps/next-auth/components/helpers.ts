@@ -1,11 +1,11 @@
 import axios from "axios"
-import pjson from "../../../package.json"
+import packageJSON from "../package.json"
 import { AuditLog } from "../pages/api/auditLogs/queue"
 
 export const getEvent = (
   action: string,
   crud: string,
-  group: string,
+  roles: string,
   actor: string,
   target: string,
   source_ip: string,
@@ -34,7 +34,7 @@ export const getEvent = (
     description: description,
     is_failure: false,
     component: component,
-    version: pjson.version,
+    version: packageJSON.version,
   }
 
   if (meta) {
@@ -45,31 +45,38 @@ export const getEvent = (
     event.external_id = externalId
   }
 
+  if (roles) {
+    if (!event.fields) {
+      event.fields = {}
+    }
+    event.fields.roles = roles
+  }
+
   return event as AuditLog
 }
 
 export const saveEvent = async (
   action: string,
   crud: string,
-  group: string,
+  roles: string,
   actor: string,
   target: string,
   source_ip: string,
   description: string,
   component: string,
-  meta?: any,
+  fields?: any,
   externalId?: string
 ) => {
   const event = getEvent(
     action,
     crud,
-    group,
+    roles,
     actor,
     target,
     source_ip,
     description,
     component,
-    meta,
+    fields,
     externalId
   )
   await axios.post(`/api/auditLogs/save`, event)
