@@ -38,8 +38,9 @@ export default class AuditLogQueue {
   }
 
   public enqueue(log: AuditLog) {
-    this.queue.push(log)
     console.log(`Added Audit Log to Queue`)
+
+    this.queue.push(log)
   }
 
   public dequeue(): AuditLog | undefined {

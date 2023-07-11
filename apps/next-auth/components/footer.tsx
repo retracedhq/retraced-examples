@@ -1,6 +1,5 @@
 import Link from "next/link"
 import styles from "./footer.module.css"
-import packageJSON from "../package.json"
 
 export default function Footer() {
   return (
@@ -16,7 +15,9 @@ export default function Footer() {
           </Link>
         </li>
         <li className={styles.navItem}>
-          <a href="https://github.com/boxyhq/retraced-fork">Integrate Audit Logs with a few lines of code</a>
+          <a href="https://github.com/boxyhq/retraced-fork">
+            Integrate Audit Logs with a few lines of code
+          </a>
         </li>
       </ul>
     </footer>
