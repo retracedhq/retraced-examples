@@ -115,8 +115,7 @@ export default NextAuth({
             "127.0.0.1",
             "Log in",
             "Home",
-            undefined,
-            "BOX-2"
+            undefined
           )
         )
       } catch (e) {
