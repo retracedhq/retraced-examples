@@ -71,7 +71,9 @@ export default function Header() {
                     "Header Component",
                     "127.0.0.1",
                     "Logout",
-                    "Header"
+                    "Header",
+                    undefined,
+                    "BOX-3"
                   )
                 }}
               >
