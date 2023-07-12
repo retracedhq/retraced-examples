@@ -21,7 +21,7 @@ const getViewerToken = async () => {
     } as any
 
     const resp = await fetch(
-      "http://localhost:3000/auditlog/publisher/v1/project/dev/viewertoken?group_id=retraced-demo&actor_id=admin&isAdmin=true",
+      `${process.env.RETRACED_BASE_URL}/publisher/v1/project/dev/viewertoken?group_id=${process.env.NEXT_PUBLIC_GROUP_ID}&actor_id=admin&isAdmin=true`,
       requestOptions
     )
     const json = await resp.json()
@@ -48,7 +48,7 @@ const getViewerSession = async (token: string) => {
     } as any
 
     const res = await fetch(
-      "http://localhost:3000/auditlog/viewer/v1/viewersession",
+      `${process.env.RETRACED_BASE_URL}/viewer/v1/viewersession`,
       requestOptions
     )
     const json = await res.json()
@@ -82,7 +82,7 @@ const getAuditLogs = async (session: string) => {
     } as any
 
     const res = await fetch(
-      "http://localhost:3000/auditlog/viewer/v1/graphql",
+      `${process.env.RETRACED_BASE_URL}/viewer/v1/graphql`,
       requestOptions
     )
     const json = await res.json()

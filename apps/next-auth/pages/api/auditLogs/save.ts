@@ -55,7 +55,7 @@ const worker = async () => {
       }
 
       fetch(
-        "http://localhost:3000/auditlog/publisher/v1/project/dev/event",
+        `${process.env.RETRACED_BASE_URL}/publisher/v1/project/dev/event`,
         requestOptions
       )
         .then((response) => response.text())
