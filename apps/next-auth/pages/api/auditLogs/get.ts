@@ -60,13 +60,61 @@ const getViewerSession = async (token: string) => {
 
 const getAuditLogs = async (session: string) => {
   try {
-    var myHeaders = new Headers()
+    const myHeaders = new Headers()
     myHeaders.append("Authorization", session)
     myHeaders.append("Content-Type", "application/json")
 
-    var raw = JSON.stringify({
-      query:
-        "\n            query Search($query: String!, $last: Int, $before: String) {\n              search(query: $query, last: $last, before: $before) {\n                totalCount\n                pageInfo {\n                  hasPreviousPage\n                }\n                edges {\n                  cursor\n                  node {\n                    id\n                    action\n                    crud\n                    created\n                    received\n                    canonical_time\n                    description\n                    actor {\n                      id\n                      name\n                      href\n                    }\n                    group {\n                      id\n                      name\n                    }\n                    target {\n                      id\n                      name\n                      href\n                      type\n                    }\n                    display {\n                      markdown\n                    }\n                    is_failure\n                    is_anonymous\n                    source_ip\n                    country\n                    loc_subdiv1\n                    loc_subdiv2\n                  }\n                }\n              }\n            }\n          ",
+    const raw = JSON.stringify({
+      query: `
+        query Search($query: String!, $last: Int, $before: String) {
+          search(query: $query, last: $last, before: $before) {
+            totalCount
+            pageInfo {
+              hasPreviousPage
+            }
+            edges {
+              cursor
+              node {
+                id
+                action
+                crud
+                created
+                received
+                canonical_time
+                description
+                actor {
+                  id
+                  name
+                  href
+                }
+                group {
+                  id
+                  name
+                }
+                target {
+                  id
+                  name
+                  href
+                  type
+                }
+                display {
+                  markdown
+                }
+                is_failure
+                is_anonymous
+                source_ip
+                country
+                loc_subdiv1
+                loc_subdiv2
+                fields {
+                  key
+                  value
+                }
+              }
+            }
+          }
+        }
+      `,
       variables: {
         query: "crud:c,u,d",
         last: 20,
@@ -74,12 +122,12 @@ const getAuditLogs = async (session: string) => {
       },
     })
 
-    var requestOptions = {
+    const requestOptions: any = {
       method: "POST",
       headers: myHeaders,
       body: raw,
       redirect: "follow",
-    } as any
+    }
 
     const res = await fetch(
       `${process.env.RETRACED_BASE_URL}/viewer/v1/graphql`,

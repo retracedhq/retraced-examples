@@ -60,11 +60,29 @@ export default function AccessDenied() {
     return input.replaceAll("**", "")
   }
 
+  const getMetaString = (obj: any, crud: string): string[] => {
+    //convert array of object containing key and value to object
+    let newObj: any = {}
+    ;(obj || []).forEach((o: any) => {
+      newObj[o["key"]] = o["value"]
+    })
+    switch (crud) {
+      case "u":
+        return Object.keys(newObj).map((k) => {
+          return `Updated ${k}: ${newObj[k]}`
+        })
+      case "d":
+        return [`Expense for ${newObj["title"]} deleted!`]
+      default:
+        return []
+    }
+  }
+
   return (
     <div>
       <h1>Logs</h1>
       <div>
-        {logs.map((l, i) => {
+        {logs.map((l: any, i) => {
           return (
             <div
               key={i}
@@ -81,6 +99,21 @@ export default function AccessDenied() {
                 }}
               >
                 <span>{formatEvent(l["display"]["markdown"])}</span>
+                <br />
+                {(l.fields || []).length > 0 && (
+                  <>
+                    <br />
+                    <span>
+                      {getMetaString(l["fields"], l["crud"]).map((m) => {
+                        return (
+                          <div>
+                            <u>{m}</u>
+                          </div>
+                        )
+                      })}
+                    </span>
+                  </>
+                )}
               </div>
             </div>
           )
