@@ -10,7 +10,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
 export default function ProtectedPage() {
   const { data: session, status } = useSession()
-  const rights = getAccessRights(session)
+  const rights = getAccessRights(session?.user)
   const loading = status === "loading"
   const [title, setTitle] = useState("")
   const [id, setId] = useState(0)
@@ -56,20 +56,19 @@ export default function ProtectedPage() {
         "Data updated",
         "Index",
         {
-          updates: {
-            title:
-              title != old["title"] ? `${old["title"]} => ${title}` : undefined,
-            amount:
-              amount != old["amount"]
-                ? `${old["amount"]} => ${amount}`
-                : undefined,
-          },
+          title:
+            title != old["title"] ? `${old["title"]} => ${title}` : undefined,
+          amount:
+            amount != old["amount"]
+              ? `${old["amount"]} => ${amount}`
+              : undefined,
         }
       )
     }
     setList(json)
     reset()
   }
+
   const reset = () => {
     setId(0)
     setAmount(0)
@@ -100,7 +99,9 @@ export default function ProtectedPage() {
         "127.0.0.1",
         "Data deleted",
         "Index",
-        expense
+        {
+          title: expense.title,
+        }
       )
     }
   }

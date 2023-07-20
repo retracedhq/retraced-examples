@@ -18,7 +18,7 @@ export const getEvent = (
     action: action,
     crud: crud,
     group: {
-      id: "retraced-demo",
+      id: process.env.NEXT_PUBLIC_GROUP_ID,
       name: "Retraced Demo",
     },
     created: new Date().toISOString(),
