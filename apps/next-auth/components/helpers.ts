@@ -12,6 +12,7 @@ export const getEvent = (
   description: string,
   component: string,
   meta?: any,
+  failure: boolean = false,
   externalId?: string
 ): AuditLog => {
   const event: any = {
@@ -32,7 +33,7 @@ export const getEvent = (
     },
     source_ip: source_ip,
     description: description,
-    is_failure: false,
+    is_failure: failure,
     component: component,
     version: packageJSON.version,
   }
@@ -65,6 +66,7 @@ export const saveEvent = async (
   description: string,
   component: string,
   fields?: any,
+  failure: boolean = false,
   externalId?: string
 ) => {
   const event = getEvent(
@@ -77,6 +79,7 @@ export const saveEvent = async (
     description,
     component,
     fields,
+    failure,
     externalId
   )
   await axios.post(`/api/auditLogs/save`, event)

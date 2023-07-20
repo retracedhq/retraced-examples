@@ -3,136 +3,145 @@ import { useSession } from "next-auth/react"
 import Layout from "../components/layout"
 import AccessDenied from "../components/access-denied"
 import { saveEvent } from "../components/helpers"
-import { Expense } from "./api/expense/types"
+import { Order } from "./api/order/types"
 import { getAccessRights } from "../components/helpers"
-import { faTrash, faPencil } from "@fortawesome/free-solid-svg-icons"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import styles from "../components/layout.module.css"
 
 export default function ProtectedPage() {
   const { data: session, status } = useSession()
   const rights = getAccessRights(session?.user)
   const loading = status === "loading"
-  const [title, setTitle] = useState("")
-  const [id, setId] = useState(0)
-  const [amount, setAmount] = useState(0)
-  const [list, setList] = useState([])
+  const [price, setPrice] = useState<number>()
+  const [quantity, setAmount] = useState<number>(0)
+  const [orders, setOrders] = useState<{
+    bids: Order[]
+    asks: Order[]
+  }>({ bids: [], asks: [] })
 
-  const fetchData = async () => {
-    if (session?.user) {
-      const res = await fetch("/api/expense/get")
-      const json = await res.json()
-      if (json) {
-        setList(json)
-      }
-    }
-  }
+  const generateOrders = (
+    numOrders: number,
+    basePrice: number,
+    quantityRange: number,
+    priceRangePercentage: number
+  ): {
+    bids: Order[]
+    asks: Order[]
+  } => {
+    let bids = [],
+      asks = []
 
-  const updateExpense = async (e: any) => {
-    const res = await fetch("/api/expense/update", {
-      method: "POST",
-      mode: "cors",
-      cache: "no-cache",
-      credentials: "same-origin",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      redirect: "follow",
-      body: JSON.stringify({
-        id,
-        title,
-        amount,
-      }),
-    })
-    let old = list.filter((d: any) => d.id == id)[0]
-    const json = await res.json()
-    if (session?.user?.name) {
-      await saveEvent(
-        "Update Expense Record",
-        "u",
-        rights,
-        session?.user?.name.split(" ")[0],
-        "Expense List",
-        "127.0.0.1",
-        "Data updated",
-        "Index",
-        {
-          title:
-            title != old["title"] ? `${old["title"]} => ${title}` : undefined,
-          amount:
-            amount != old["amount"]
-              ? `${old["amount"]} => ${amount}`
-              : undefined,
-        }
-      )
+    for (let i = 0; i < numOrders; i++) {
+      const quantity = Math.floor(Math.random() * quantityRange) + 1
+      const priceVariation = (basePrice * priceRangePercentage) / 100
+      const price = basePrice + (Math.random() * 2 - 1) * priceVariation
+
+      bids.push({
+        quantity: quantity,
+        price: parseFloat(price.toFixed(2)), // Rounding price to 2 decimal places
+      })
     }
-    setList(json)
-    reset()
+
+    bids = bids.sort((a, b) => b.price - a.price) // Sort bids in descending order
+
+    for (let i = 0; i < numOrders; i++) {
+      const quantity = Math.floor(Math.random() * quantityRange) + 1
+      const priceVariation = (bids[0].price * priceRangePercentage) / 100
+      const price = bids[0].price + (Math.random() * 2 - 1) * priceVariation
+
+      asks.push({
+        quantity: quantity,
+        price: parseFloat(price.toFixed(2)), // Rounding price to 2 decimal places
+      })
+    }
+
+    asks = asks.sort((a, b) => a.price - b.price) // Sort asks in ascending order
+
+    return { bids, asks }
   }
 
   const reset = () => {
-    setId(0)
     setAmount(0)
-    setTitle("")
+    setPrice(0)
   }
 
-  const deleteExpense = async (expense: Expense) => {
-    const res = await fetch("/api/expense/delete", {
-      method: "POST",
-      mode: "cors",
-      cache: "no-cache",
-      credentials: "same-origin",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      redirect: "follow",
-      body: JSON.stringify(expense),
-    })
-    const json = await res.json()
-    setList(json)
+  const saveOrder = async (e: any) => {
     if (session?.user?.name) {
       await saveEvent(
-        "Delete Expense Record",
-        "d",
+        "Order.Create",
+        "c",
         rights,
         session?.user?.name.split(" ")[0],
-        "Expense List",
+        "Create Order",
         "127.0.0.1",
-        "Data deleted",
-        "Index",
+        "Order created",
+        "Orderbook",
         {
-          title: expense.title,
+          price: price?.toString(),
+          quantity: quantity?.toString(),
+        }
+      )
+    }
+    reset()
+  }
+
+  const uuidv4 = () => {
+    return "xxxxxxxx-xxxx-4xxx-yxxx".replace(/[xy]/g, function (c) {
+      var r = (Math.random() * 16) | 0,
+        v = c === "x" ? r : (r & 0x3) | 0x8
+      return v.toString(16)
+    })
+  }
+
+  const orderMatched = async () => {
+    if (session?.user?.name) {
+      await saveEvent(
+        "Order.Match",
+        "c",
+        "Matching Engine",
+        "Matching Engine",
+        "Orderbook",
+        "127.0.0.1",
+        "Order matched",
+        "Orderbook",
+        {
+          order: `${uuidv4()} <=> ${uuidv4()}`,
         }
       )
     }
   }
 
-  const saveExpense = async (e: any) => {
-    const res = await fetch("/api/expense/save", {
-      method: "POST",
-      mode: "cors",
-      cache: "no-cache",
-      credentials: "same-origin",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      redirect: "follow",
-      body: JSON.stringify({
-        title,
-        amount,
-      }),
-    })
-    const json = await res.json()
-    setList(json)
+  const saveError = async (e: any) => {
     if (session?.user?.name) {
+      const oId = uuidv4()
       await saveEvent(
-        "Create Expense Record",
+        "Order.Create",
         "c",
         rights,
         session?.user?.name.split(" ")[0],
-        "Expense List",
+        `Order ${oId}`,
         "127.0.0.1",
-        "Expense created",
-        "Index"
+        "Order creation failed (Unable to reach matching engine)",
+        "Orderbook",
+        {
+          price: price?.toString(),
+          quantity: quantity?.toString(),
+          orderId: oId,
+          error: "Unable to reach matching engine",
+          stacktrace: `Error: Unable to reach matching engine
+          at Orderbook.createOrder (/Projects/retraced-examples/apps/next-auth/pages/api/trade/orderbook.ts:39:11)
+          at /Projects/retraced-examples/apps/next-auth/pages/api/trade/orderbook.ts:20:16
+          at Array.forEach (<anonymous>)
+          at Orderbook.matchOrders (/Users/roberto/Projects/retraced-examples/apps/next-auth/pages/api/trade/orderbook.ts:19:15)
+          at /Projects/retraced-examples/apps/next-auth/pages/api/trade/orderbook.ts:13:16
+          at Array.forEach (<anonymous>)
+          at Orderbook.createOrder (/Users/roberto/Projects/retraced-examples/apps/next-auth/pages/api/trade/orderbook.ts:12:15)
+          at /Projects/retraced-examples/apps/next-auth/pages/api/trade/orderbook.ts:6:16
+          at Array.forEach (<anonymous>)
+          at Orderbook.matchOrders (/Users/roberto/Projects/retraced-examples/apps/next-auth/pages/api/trade/orderbook.ts:5:15)
+          at /Projects/retraced-examples/apps/next-auth/pages/api/trade/orderbook.ts:13:16`,
+          errorcode: "500",
+        },
+        true
       )
     }
     reset()
@@ -140,10 +149,15 @@ export default function ProtectedPage() {
 
   // Fetch content from protected route
   useEffect(() => {
-    fetchData()
+    const orders = generateOrders(10, 500, 100, 0.1)
+    setOrders(orders)
     setInterval(() => {
-      fetchData()
-    }, 2500)
+      const orders = generateOrders(10, 500, 100, 0.1)
+      setOrders(orders)
+    }, 3000)
+    setInterval(() => {
+      orderMatched()
+    }, 7000)
   }, [session])
 
   // When rendering client side don't display anything until loading is complete
@@ -163,26 +177,26 @@ export default function ProtectedPage() {
     <Layout>
       {(rights === "admin" || rights === "manager") && (
         <div>
-          <h1>Add an Expense</h1>
+          <h1>Place an Order</h1>
           <form>
-            <label style={{ fontSize: "1.2rem" }}>Enter the Amount:</label>
+            <label style={{ fontSize: "1.2rem" }}>Quantity:</label>
             <br />
             <input
               className="textPrimary"
-              value={amount}
+              value={quantity}
               type="number"
-              id="amount"
+              id="quantity"
               onChange={(e) => setAmount(parseInt(e.target.value))}
             />
             <br />
-            <label style={{ fontSize: "1.2rem" }}>Description:</label>
+            <label style={{ fontSize: "1.2rem" }}>Price:</label>
             <br />
             <input
               className="textPrimary"
-              value={title}
-              type="text"
-              id="title"
-              onChange={(e) => setTitle(e.target.value)}
+              value={price}
+              type="number"
+              id="price"
+              onChange={(e) => setPrice(parseFloat(e.target.value))}
             />
             <br />
             <br />
@@ -190,51 +204,74 @@ export default function ProtectedPage() {
               className="buttonPrimary"
               type="button"
               id="add"
-              value={id == 0 ? "Add" : "Update"}
-              onClick={id == 0 ? saveExpense : updateExpense}
+              value={"Simulate Order"}
+              onClick={saveOrder}
             />
-            {id != 0 && (
-              <button className="buttonPrimary marginAll" onClick={reset}>
-                Cancel
-              </button>
-            )}
+            <br />
+            <br />
+            <input
+              className="buttonPrimary"
+              type="button"
+              id="add"
+              value={"Simulate Error"}
+              onClick={saveError}
+            />
           </form>
           <hr />
         </div>
       )}
-      {list.map((l: Expense) => {
-        if (l) {
-          return (
-            <div key={l.id} style={{ marginBottom: "10px" }}>
-              {(rights === "admin" || rights === "manager") && (
-                <span style={{ marginRight: "5px" }}>
-                  <button
-                    className="buttonPrimary"
-                    onClick={(e) => {
-                      setId(l.id ? l.id : 0)
-                      setAmount(l.amount)
-                      setTitle(l.title)
-                    }}
-                  >
-                    <FontAwesomeIcon size={"1x"} icon={faPencil} />
-                  </button>{" "}
-                  <button
-                    className="buttonPrimary"
-                    onClick={(e) => deleteExpense(l)}
-                  >
-                    <FontAwesomeIcon size={"1x"} icon={faTrash} />
-                  </button>
-                </span>
-              )}
-              <span style={{ fontSize: "1.4rem" }}>
-                You spent {l.amount}/- for {l.title}
-              </span>
+      <div className={styles.row}>
+        <div className={styles.column}>
+          {orders.bids && orders.bids.length > 0 && (
+            <div>
+              <h2>Bids</h2>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Qty</th>
+                    <th>Orders</th>
+                    <th>Price</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {orders.bids.slice(0, 10).map((order, n) => (
+                    <tr key={`bids-${n}`} style={{ color: "blue" }}>
+                      <td>{order.quantity}</td>
+                      <td>{Math.round(Math.random() * 100) + 1}</td>
+                      <td>{order.price}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
-          )
-        } else {
-          return <></>
-        }
-      })}
+          )}
+        </div>
+        <div className={styles.column}>
+          {orders.asks && orders.asks.length > 0 && (
+            <div>
+              <h2>Offers</h2>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Qty</th>
+                    <th>Orders</th>
+                    <th>Price</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {orders.asks.slice(0, 10).map((order, n) => (
+                    <tr key={`asks-${n}`} style={{ color: "red" }}>
+                      <td>{order.quantity}</td>
+                      <td>{Math.round(Math.random() * 100) + 1}</td>
+                      <td>{order.price}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      </div>
     </Layout>
   )
 }

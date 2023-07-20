@@ -67,9 +67,9 @@ export default function AccessDenied() {
       newObj[o["key"]] = o["value"]
     })
     switch (crud) {
-      case "u":
+      case "c":
         return Object.keys(newObj).map((k) => {
-          return `Updated ${k}: ${newObj[k]}`
+          return `${k}: ${newObj[k]}`
         })
       case "d":
         return [`Expense for ${newObj["title"]} deleted!`]
@@ -94,7 +94,13 @@ export default function AccessDenied() {
             >
               <div
                 style={{
-                  backgroundColor: l["is_new"] ? "grey" : "white",
+                  backgroundColor: l["is_failure"]
+                    ? l["is_new"]
+                      ? "#e98a8a"
+                      : "white"
+                    : l["is_new"]
+                    ? "grey"
+                    : "white",
                   padding: "10px",
                 }}
               >
