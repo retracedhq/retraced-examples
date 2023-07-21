@@ -1,3 +1,4 @@
+import { EventEmitter } from "events"
 export type AuditLog = {
   action: string
   crud: string
@@ -26,10 +27,12 @@ export type AuditLog = {
   version: string
 }
 
-export default class AuditLogQueue {
+export default class AuditLogQueue extends EventEmitter {
   private queue: AuditLog[] = []
   private static instance: AuditLogQueue
-  private constructor() {}
+  private constructor() {
+    super()
+  }
   public static getInstance(): AuditLogQueue {
     if (!AuditLogQueue.instance) {
       AuditLogQueue.instance = new AuditLogQueue()
@@ -41,6 +44,8 @@ export default class AuditLogQueue {
     console.log(`Added Audit Log to Queue`)
 
     this.queue.push(log)
+    this.emit("newLog")
+    return this
   }
 
   public dequeue(): AuditLog | undefined {
