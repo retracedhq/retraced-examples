@@ -15,7 +15,7 @@ export default function Footer() {
           </Link>
         </li>
         <li className={styles.navItem}>
-          <a href="https://github.com/boxyhq/retraced-fork">
+          <a href="https://github.com/retracedhq/retraced">
             Integrate Audit Logs with a few lines of code
           </a>
         </li>

@@ -48,6 +48,7 @@
     "node": ">=14.0.0"
   },
   "dependencies": {
+    "@retracedhq/logs-viewer": "^2.5.0",
     "axios": "^0.27.2",
     "uuid": "^9.0.0"
   }

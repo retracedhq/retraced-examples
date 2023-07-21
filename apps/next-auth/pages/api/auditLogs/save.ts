@@ -63,7 +63,7 @@ async function sendEventToService(log: AuditLog) {
   }
   return new Promise((resolve) => {
     fetch(
-      `${process.env.RETRACED_BASE_URL}/publisher/v1/project/dev/event`,
+      `${process.env.NEXT_PUBLIC_RETRACED_BASE_URL}/publisher/v1/project/dev/event`,
       requestOptions
     )
       .then((response) => response.text())

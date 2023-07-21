@@ -149,51 +149,49 @@ export default function ProtectedPage() {
   // If session exists, display content
   return (
     <Layout>
-      {(rights === "admin" || rights === "manager") && (
-        <div>
-          <h1>Place an Order</h1>
-          <form>
-            <label style={{ fontSize: "1.2rem" }}>Quantity:</label>
-            <br />
-            <input
-              className="textPrimary"
-              value={quantity}
-              type="number"
-              id="quantity"
-              onChange={(e) => setAmount(parseInt(e.target.value))}
-            />
-            <br />
-            <label style={{ fontSize: "1.2rem" }}>Price:</label>
-            <br />
-            <input
-              className="textPrimary"
-              value={price}
-              type="number"
-              id="price"
-              onChange={(e) => setPrice(parseFloat(e.target.value))}
-            />
-            <br />
-            <br />
-            <input
-              className="buttonPrimary"
-              type="button"
-              id="add"
-              value={"Simulate Order"}
-              onClick={saveOrder}
-            />
-            <br />
-            <br />
-            <input
-              className="buttonPrimary"
-              type="button"
-              id="add"
-              value={"Simulate Error"}
-              onClick={saveError}
-            />
-          </form>
-          <hr />
-        </div>
-      )}
+      <div>
+        <h1>Place an Order</h1>
+        <form>
+          <label style={{ fontSize: "1.2rem" }}>Quantity:</label>
+          <br />
+          <input
+            className="textPrimary"
+            value={quantity}
+            type="number"
+            id="quantity"
+            onChange={(e) => setAmount(parseInt(e.target.value))}
+          />
+          <br />
+          <label style={{ fontSize: "1.2rem" }}>Price:</label>
+          <br />
+          <input
+            className="textPrimary"
+            value={price}
+            type="number"
+            id="price"
+            onChange={(e) => setPrice(parseFloat(e.target.value))}
+          />
+          <br />
+          <br />
+          <input
+            className="buttonPrimary"
+            type="button"
+            id="add"
+            value={"Simulate Order"}
+            onClick={saveOrder}
+          />
+          <br />
+          <br />
+          <input
+            className="buttonPrimary"
+            type="button"
+            id="add"
+            value={"Simulate Error"}
+            onClick={saveError}
+          />
+        </form>
+        <hr />
+      </div>
       <div className={styles.row}>
         {orders.bids && orders.bids.length > 0 && (
           <div className={styles.column}>

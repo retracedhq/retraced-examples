@@ -1,21 +1,33 @@
 .row {
-    display: flex;
+  display: flex;
 }
 
 .column {
-    flex: 50%;
-    padding: 10px;
-    min-height: 500px;
+  flex: 50%;
+  padding: 10px;
 }
 
 .logsColumn {
-    flex: 50%;
-    padding: 10px;
-    min-height: 500px;
-    border-left: 3px solid #333;
+  flex: 50%;
+  padding: 10px;
+  overflow: scroll;
+  overflow-y: scroll;
+  border-left: 3px solid #333;
 }
 
 .layoutDiv {
-    border-style: solid;
-    border-color: #333;
+  border-style: solid;
+  border-color: #333;
+}
+
+.scrollable {
+  max-height: 600px;
+  overflow: scroll;
+  overflow-y: scroll;
+}
+
+.alignRightLink {
+  color: blue;
+  cursor: pointer;
+  text-align: right;
 }

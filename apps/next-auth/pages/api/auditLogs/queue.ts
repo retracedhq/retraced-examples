@@ -30,6 +30,7 @@ export type AuditLog = {
 export default class AuditLogQueue extends EventEmitter {
   private queue: AuditLog[] = []
   private static instance: AuditLogQueue
+  public static viewerToken: string = ""
   private constructor() {
     super()
   }
