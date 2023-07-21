@@ -92,9 +92,9 @@ export default function ProtectedPage() {
     })
   }
 
-  const orderMatched = async () => {
+  const orderMatched = () => {
     if (session?.user?.name) {
-      await saveEvent(
+      saveEvent(
         "Order.Match",
         "c",
         "Matching Engine",
@@ -110,7 +110,7 @@ export default function ProtectedPage() {
     }
   }
 
-  const saveError = async (e: any) => {
+  const saveError = async (e: any, skipStacktrace = true) => {
     if (session?.user?.name) {
       const oId = uuidv4()
       await saveEvent(
@@ -127,7 +127,9 @@ export default function ProtectedPage() {
           quantity: quantity?.toString(),
           orderId: oId,
           error: "Unable to reach matching engine",
-          stacktrace: `Error: Unable to reach matching engine
+          stacktrace: skipStacktrace
+            ? undefined
+            : `Error: Unable to reach matching engine
           at Orderbook.createOrder (/Projects/retraced-examples/apps/next-auth/pages/api/trade/orderbook.ts:39:11)
           at /Projects/retraced-examples/apps/next-auth/pages/api/trade/orderbook.ts:20:16
           at Array.forEach (<anonymous>)
@@ -157,7 +159,7 @@ export default function ProtectedPage() {
     }, 3000)
     setInterval(() => {
       orderMatched()
-    }, 7000)
+    }, 30000)
   }, [session])
 
   // When rendering client side don't display anything until loading is complete

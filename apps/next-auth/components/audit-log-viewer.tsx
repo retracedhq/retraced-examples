@@ -80,7 +80,7 @@ export default function AccessDenied() {
 
   return (
     <div>
-      <h1>Logs</h1>
+      <h1>Audit Logs</h1>
       <div>
         {logs.map((l: any, i) => {
           return (
@@ -95,9 +95,7 @@ export default function AccessDenied() {
               <div
                 style={{
                   backgroundColor: l["is_failure"]
-                    ? l["is_new"]
-                      ? "#e98a8a"
-                      : "white"
+                    ? "#e98a8a"
                     : l["is_new"]
                     ? "grey"
                     : "white",
