@@ -1,4 +1,4 @@
-import Layout from "../components/layout"
+import ViewerLayout from "../components/viewer-layout"
 import dynamic from "next/dynamic"
 import { useState, useEffect } from "react"
 import axios from "axios"
@@ -40,8 +40,6 @@ export default function ViewerPage() {
   }, [])
 
   return (
-    <Layout showLogs={false}>
-      {token ? render() : renderError("No Token")}
-    </Layout>
+    <ViewerLayout>{token ? render() : renderError("No Token")}</ViewerLayout>
   )
 }

@@ -21,7 +21,7 @@ export default function Layout({ children, showLogs = true }: Props) {
           <div className={styles.column}>
             <main>{children}</main>
           </div>
-          {showLogs && (
+          {showLogs && rights && (
             <div className={styles.logsColumn}>
               <LogsViewer />
             </div>

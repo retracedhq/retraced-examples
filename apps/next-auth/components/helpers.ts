@@ -5,7 +5,7 @@ import { AuditLog } from "../pages/api/auditLogs/queue"
 export const getEvent = (
   action: string,
   crud: string,
-  roles: string,
+  role: string,
   actor: string,
   target: string,
   source_ip: string,
@@ -46,11 +46,11 @@ export const getEvent = (
     event.external_id = externalId
   }
 
-  if (roles) {
+  if (role) {
     if (!event.fields) {
       event.fields = {}
     }
-    event.fields.roles = roles
+    event.fields.role = role
   }
 
   return event as AuditLog
@@ -59,7 +59,7 @@ export const getEvent = (
 export const saveEvent = async (
   action: string,
   crud: string,
-  roles: string,
+  role: string,
   actor: string,
   target: string,
   source_ip: string,
@@ -72,7 +72,7 @@ export const saveEvent = async (
   const event = getEvent(
     action,
     crud,
-    roles,
+    role,
     actor,
     target,
     source_ip,
