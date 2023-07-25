@@ -199,17 +199,19 @@ export default function ProtectedPage() {
             <table>
               <thead>
                 <tr>
-                  <th>Qty</th>
-                  <th>Orders</th>
-                  <th>Price</th>
+                  <th className={styles.tcell}>Qty</th>
+                  <th className={styles.tcell}>Orders</th>
+                  <th className={styles.tcell}>Price</th>
                 </tr>
               </thead>
               <tbody>
                 {orders.bids.slice(0, 10).map((order, n) => (
                   <tr key={`bids-${n}`} style={{ color: "blue" }}>
-                    <td>{order.quantity}</td>
-                    <td>{Math.round(Math.random() * 100) + 1}</td>
-                    <td>{order.price}</td>
+                    <td className={styles.tcell}>{order.quantity}</td>
+                    <td className={styles.tcell}>
+                      {Math.round(Math.random() * 100) + 1}
+                    </td>
+                    <td className={styles.tcell}>{order.price}</td>
                   </tr>
                 ))}
               </tbody>
@@ -222,17 +224,19 @@ export default function ProtectedPage() {
             <table>
               <thead>
                 <tr>
-                  <th>Qty</th>
-                  <th>Orders</th>
-                  <th>Price</th>
+                  <th className={styles.tcell}>Qty</th>
+                  <th className={styles.tcell}>Orders</th>
+                  <th className={styles.tcell}>Price</th>
                 </tr>
               </thead>
               <tbody>
                 {orders.asks.slice(0, 10).map((order, n) => (
                   <tr key={`asks-${n}`} style={{ color: "red" }}>
-                    <td>{order.quantity}</td>
-                    <td>{Math.round(Math.random() * 100) + 1}</td>
-                    <td>{order.price}</td>
+                    <td className={styles.tcell}>{order.quantity}</td>
+                    <td className={styles.tcell}>
+                      {Math.round(Math.random() * 100) + 1}
+                    </td>
+                    <td className={styles.tcell}>{order.price}</td>
                   </tr>
                 ))}
               </tbody>

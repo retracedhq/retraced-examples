@@ -21,7 +21,7 @@
 }
 
 .scrollable {
-  max-height: 600px;
+  max-height: 700px;
   overflow: scroll;
   overflow-y: scroll;
 }
@@ -30,4 +30,8 @@
   color: blue;
   cursor: pointer;
   text-align: right;
+}
+
+.tcell {
+  padding: 5px;
 }
