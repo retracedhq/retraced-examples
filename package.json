@@ -36,7 +36,6 @@
     ]
   },
   "devDependencies": {
-    "@types/uuid": "9.0.2",
     "husky": "7.0.4",
     "lint-staged": "12.3.7",
     "prettier": "2.6.0",
@@ -48,8 +47,6 @@
     "node": ">=14.0.0"
   },
   "dependencies": {
-    "@retracedhq/logs-viewer": "2.5.0",
-    "axios": "0.27.2",
-    "uuid": "9.0.0"
+    "axios": "^0.27.2"
   }
 }
