@@ -73,6 +73,7 @@ export default function Header() {
                     "Logout",
                     "Header",
                     undefined,
+                    false,
                     "BOX-3"
                   )
                 }}

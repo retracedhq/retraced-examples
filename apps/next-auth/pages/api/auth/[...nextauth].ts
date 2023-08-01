@@ -116,6 +116,7 @@ export default NextAuth({
             "Log in",
             "Home",
             undefined,
+            false,
             "BOX-2"
           )
         )

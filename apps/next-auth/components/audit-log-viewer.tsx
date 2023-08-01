@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react"
-import Link from "next/link"
 import axios from "axios"
 import styles from "../components/layout.module.css"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
