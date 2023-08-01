@@ -1,8 +1,8 @@
-.row {
+.flexrow {
   display: flex;
 }
 
-.column {
+.flexcolumn {
   flex: 50%;
   padding: 10px;
 }
@@ -15,13 +15,14 @@
   border-left: 3px solid #333;
 }
 
-.layoutDiv {
+._layoutDiv {
   border-style: solid;
   border-color: #333;
+  margin-left: 25%;
 }
 
 .scrollable {
-  max-height: 700px;
+  max-height: 600px;
   overflow: scroll;
   overflow-y: scroll;
 }
@@ -30,8 +31,4 @@
   color: blue;
   cursor: pointer;
   text-align: right;
-}
-
-.tcell {
-  padding: 5px;
 }

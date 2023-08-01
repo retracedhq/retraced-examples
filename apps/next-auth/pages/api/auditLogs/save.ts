@@ -31,7 +31,7 @@ let defaultEvent = {
 }
 
 const sleep = async (time: number) => {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     setTimeout(() => {
       resolve(undefined)
     }, time)
@@ -42,30 +42,45 @@ const worker = async () => {
   do {
     let log: AuditLog | undefined = AuditLogQueue.getInstance().dequeue()
     if (log) {
-      var myHeaders = new Headers()
-      myHeaders.append("Authorization", "token=dev")
-      myHeaders.append("Content-Type", "application/json")
-
-      var raw = JSON.stringify({ ...defaultEvent, ...log })
-
-      var requestOptions = {
-        method: "POST",
-        headers: myHeaders,
-        body: raw,
-      }
-
-      fetch(
-        "http://localhost:3000/auditlog/publisher/v1/project/dev/event",
-        requestOptions
-      )
-        .then((response) => response.text())
-        .then((result) => console.log(result))
-        .catch((error) => console.log(error))
+      await sendEventToService(log)
     } else {
-      await sleep(500)
+      return
     }
   } while (true)
 }
+
+async function sendEventToService(log: AuditLog) {
+  var myHeaders = new Headers()
+  myHeaders.append("Authorization", "token=dev")
+  myHeaders.append("Content-Type", "application/json")
+
+  var raw = JSON.stringify({ ...defaultEvent, ...log })
+
+  var requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    body: raw,
+  }
+  return new Promise((resolve) => {
+    fetch(
+      `${process.env.NEXT_PUBLIC_RETRACED_BASE_URL}/publisher/v1/project/dev/event`,
+      requestOptions
+    )
+      .then((response) => response.text())
+      .then((result) => {
+        console.log(result)
+        resolve(true)
+      })
+      .catch((error) => {
+        console.log(error)
+        resolve(false)
+      })
+  })
+}
+
+AuditLogQueue.getInstance().on("newLog", async () => {
+  await worker()
+})
 
 // TODO:
 /*
@@ -84,5 +99,3 @@ export default function handler(req: any, res: any) {
     res.status(400).json(ex)
   }
 }
-
-worker()

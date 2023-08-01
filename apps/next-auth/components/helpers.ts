@@ -5,20 +5,21 @@ import { AuditLog } from "../pages/api/auditLogs/queue"
 export const getEvent = (
   action: string,
   crud: string,
-  roles: string,
+  role: string,
   actor: string,
   target: string,
   source_ip: string,
   description: string,
   component: string,
   meta?: any,
+  failure: boolean = false,
   externalId?: string
 ): AuditLog => {
   const event: any = {
     action: action,
     crud: crud,
     group: {
-      id: "retraced-demo",
+      id: process.env.NEXT_PUBLIC_GROUP_ID,
       name: "Retraced Demo",
     },
     created: new Date().toISOString(),
@@ -32,7 +33,7 @@ export const getEvent = (
     },
     source_ip: source_ip,
     description: description,
-    is_failure: false,
+    is_failure: failure,
     component: component,
     version: packageJSON.version,
   }
@@ -45,11 +46,11 @@ export const getEvent = (
     event.external_id = externalId
   }
 
-  if (roles) {
+  if (role) {
     if (!event.fields) {
       event.fields = {}
     }
-    event.fields.roles = roles
+    event.fields.role = role
   }
 
   return event as AuditLog
@@ -58,25 +59,27 @@ export const getEvent = (
 export const saveEvent = async (
   action: string,
   crud: string,
-  roles: string,
+  role: string,
   actor: string,
   target: string,
   source_ip: string,
   description: string,
   component: string,
   fields?: any,
+  failure: boolean = false,
   externalId?: string
 ) => {
   const event = getEvent(
     action,
     crud,
-    roles,
+    role,
     actor,
     target,
     source_ip,
     description,
     component,
     fields,
+    failure,
     externalId
   )
   await axios.post(`/api/auditLogs/save`, event)

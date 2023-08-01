@@ -7,9 +7,10 @@ import { getAccessRights } from "./helpers"
 
 interface Props {
   children: React.ReactNode
+  showLogs?: boolean
 }
 
-export default function Layout({ children }: Props) {
+export default function Layout({ children, showLogs = true }: Props) {
   const { data: session, status } = useSession()
   const rights = getAccessRights(session?.user)
   return (
@@ -20,7 +21,7 @@ export default function Layout({ children }: Props) {
           <div className={styles.column}>
             <main>{children}</main>
           </div>
-          {rights === "admin" && (
+          {showLogs && rights && (
             <div className={styles.logsColumn}>
               <LogsViewer />
             </div>
