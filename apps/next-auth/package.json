@@ -23,9 +23,13 @@
     "next-auth": "4.3.1",
     "nodemailer": "6.7.2",
     "react": "17.0.2",
-    "react-dom": "17.0.2"
+    "react-dom": "17.0.2",
+    "@retracedhq/logs-viewer": "2.5.0",
+    "axios": "0.27.2",
+    "uuid": "9.0.0"
   },
   "devDependencies": {
+    "@types/uuid": "9.0.2",
     "@boxyhq/config": "*",
     "@boxyhq/tsconfig": "*",
     "@types/node": "17.0.21",

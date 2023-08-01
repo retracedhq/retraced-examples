@@ -1,26 +1,18 @@
 # Overview
 
-Expense manager example for Audit logs with next-auth.
+B2B Trading example for Audit logs with next-auth.
 
 This is an example application that shows how [`Audit logs`](https://github.com/retracedhq/retraced) and `next-auth` is applied to a basic Next.js app.
 
-## Expense Manager
-
-The example has following roles,
-
-1. Admin
-2. Manager
-3. Viewer
+## B2B Trading
 
 When you click on `Login` button app redirects to `https://mocksaml.com/` and asks for email.
 
-You can enter `Admin` or `Manager` or `Viewer` as email to use those roles.
-
-If you enter anything other than above roles that user will be considered as `Viewer`.
-
-- Only Admin can see the Audit logs.
-- Manager & Admin can make changes to the expenses.
-- Viewer can only see the expenses.
+You can see the `bids` and `offers` on the left bottom section.
+You can create an `order` using the form in the left section.
+Once you create an order you will see order `creation log` on the Audit logs section on the right side.
+You can `simulate an error` and see how audit logs catches it and shows it.
+You can click on `Open logs viewer` to open the logs viewer in new tab and see detailed log info and filter on it.
 
 ## Getting Started
 

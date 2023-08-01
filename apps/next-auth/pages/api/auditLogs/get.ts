@@ -1,9 +1,17 @@
+import AuditLogQueue from "./queue"
+
 export default async function handler(req: any, res: any) {
   try {
-    const token = await getViewerToken()
-    const session = await getViewerSession(token)
-    const logs = await getAuditLogs(session)
-    res.status(200).send(logs)
+    let token
+    if (req.query.onlyToken) {
+      token = await getViewerToken()
+      res.status(200).send({ token })
+    } else {
+      token = await getViewerToken()
+      const session = await getViewerSession(token)
+      const logs = await getAuditLogs(session)
+      res.status(200).send(logs)
+    }
   } catch (ex) {
     res.status(400).json(ex)
   }
@@ -11,21 +19,26 @@ export default async function handler(req: any, res: any) {
 
 const getViewerToken = async () => {
   try {
-    var myHeaders = new Headers()
-    myHeaders.append("Authorization", "Token token=dev")
+    if (AuditLogQueue.viewerToken) {
+      return AuditLogQueue.viewerToken
+    } else {
+      var myHeaders = new Headers()
+      myHeaders.append("Authorization", "Token token=dev")
 
-    var requestOptions = {
-      method: "GET",
-      headers: myHeaders,
-      redirect: "follow",
-    } as any
+      var requestOptions = {
+        method: "GET",
+        headers: myHeaders,
+        redirect: "follow",
+      } as any
 
-    const resp = await fetch(
-      `${process.env.RETRACED_BASE_URL}/publisher/v1/project/dev/viewertoken?group_id=${process.env.NEXT_PUBLIC_GROUP_ID}&actor_id=admin&isAdmin=true`,
-      requestOptions
-    )
-    const json = await resp.json()
-    return json.token
+      const resp = await fetch(
+        `${process.env.NEXT_PUBLIC_RETRACED_BASE_URL}/publisher/v1/project/dev/viewertoken?group_id=${process.env.NEXT_PUBLIC_GROUP_ID}&actor_id=admin&isAdmin=true`,
+        requestOptions
+      )
+      const json = await resp.json()
+      AuditLogQueue.viewerToken = json.token
+      return json.token
+    }
   } catch (ex) {
     console.log(ex)
   }
@@ -48,7 +61,7 @@ const getViewerSession = async (token: string) => {
     } as any
 
     const res = await fetch(
-      `${process.env.RETRACED_BASE_URL}/viewer/v1/viewersession`,
+      `${process.env.NEXT_PUBLIC_RETRACED_BASE_URL}/viewer/v1/viewersession`,
       requestOptions
     )
     const json = await res.json()
@@ -130,7 +143,7 @@ const getAuditLogs = async (session: string) => {
     }
 
     const res = await fetch(
-      `${process.env.RETRACED_BASE_URL}/viewer/v1/graphql`,
+      `${process.env.NEXT_PUBLIC_RETRACED_BASE_URL}/viewer/v1/graphql`,
       requestOptions
     )
     const json = await res.json()
