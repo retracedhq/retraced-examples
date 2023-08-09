@@ -117,7 +117,7 @@ export default NextAuth({
             "Home",
             undefined,
             false,
-            "BOX-2"
+            "ALDEMO-2"
           )
         )
       } catch (e) {
